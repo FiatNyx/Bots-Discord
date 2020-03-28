@@ -3,7 +3,7 @@ const fs = require('fs')
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const token = 'Désolé, mais non, je ne peux pas le donner';
+const token = 'privé';
 
 
 var messageToDelete = []
@@ -74,7 +74,7 @@ bot.on('message', msg =>{
             timeToDelete = 15
             console.log(msg.content)
             let messagePrecedant = fs.readFileSync('TextLog.txt')
-            fs.writeFile('TextLog.txt', messagePrecedant + msg.content, (err) => { 
+            fs.writeFile('TextLog.txt', messagePrecedant + msg.content + "\n", (err) => { 
                 if (err) throw err; 
             }) 
             msg.delete();
