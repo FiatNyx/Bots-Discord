@@ -3,7 +3,7 @@ const fs = require('fs')
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const token = 'non';
+const token = 'Désolé, mais non, je ne peux pas le donner';
 
 
 var messageToDelete = []
@@ -56,14 +56,14 @@ bot.on('message', msg =>{
         msg.delete();
     }
 
-    else if((msg.member.user.username == "Fiat_Nyx" && minixiOK == false) || (msg.member.user.username == "Samgd14" && samiOK == false)){
+    else if((msg.member.user.username == "Minixi1414" && minixiOK == false) || (msg.member.user.username == "Samgd14" && samgdOK == false)){
         if (msg.content == "Le MJ n'est pas un tyran, je ne suis pas censuré" && msg.member.user.username == "Samgd14"){
             samgdOK = true;
             fs.writeFile('SamgdOK.txt', "true", (err) => {if (err) throw err; }) 
             msg.channel.send("Félicitions! Vous pouvez parler")
             timeToDelete = 5
         }
-        else if(msg.content == "Le MJ n'est pas un tyran, je ne suis pas censuré" && msg.member.user.username == "Fiat_Nyx"){
+        else if(msg.content == "Le MJ n'est pas un tyran, je ne suis pas censuré" && msg.member.user.username == "Minixi1414"){
             minixiOK = true
             fs.writeFile('MinixiOK.txt', "true", (err) => {if (err) throw err; }) 
             msg.channel.send("Félicitions! Vous pouvez parler")
