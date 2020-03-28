@@ -3,10 +3,14 @@ const fs = require('fs')
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const token = 'DansTesRêves';
+const token = 'non';
+
 
 var messageToDelete = []
-var motCensurer = ['CENSURE','censure','capitaine','Capitaine','Daeric','daeric']
+var motCensurer = ['CENSURE','censure',"Censure",'capitaine','Capitaine','Daeric','daeric',"Çensure","çensure","censurer","Censurer","çensurer","çensuré","çensurés", "Çensurer", "Çensuré"]
+var samgdOK = false
+var minixiOK = false
+var timeToDelete = 10
 
 function deleteMessageDuBot(){
     console.log("Deleted")
@@ -17,6 +21,13 @@ function deleteMessageDuBot(){
 
 bot.on('ready', () => {
     console.log('This bot is online!');
+
+    if(fs.readFileSync("MinixiOK.txt") == "true"){
+        minixiOK = true
+    }
+    if(fs.readFileSync("SamgdOK.txt") == "true"){
+        samgdOK = true
+    }
 })
 
 bot.on('message', msg =>{
@@ -37,24 +48,43 @@ bot.on('message', msg =>{
     if(contientLeMot){
         contientLeMot = false
         msg.channel.send("Je ne suis qu'un pauvre bot qui suit les ordres d'un dictateur. Je suis désolé de toute cette censure");
-        fs.writeFile('TextLog.txt', msg.content, (err) => { 
+        timeToDelete = 10
+        let messagePrecedant = fs.readFileSync('TextLog.txt')
+        fs.writeFile('TextLog.txt', messagePrecedant + msg.content + "\n", (err) => { 
             if (err) throw err; 
         }) 
         msg.delete();
     }
 
-    else if(msg.member.user.username == "Minixi1414" || msg.member.user.username == "Samgd14"){
-        msg.channel.send("Je ne suis qu'un pauvre bot qui suit les ordres d'un dictateur. Je suis désolé de toute cette censure");
-        console.log(msg.content)
-        fs.writeFile('TextLog.txt', msg.content, (err) => { 
-            if (err) throw err; 
-        }) 
-        msg.delete();
+    else if((msg.member.user.username == "Fiat_Nyx" && minixiOK == false) || (msg.member.user.username == "Samgd14" && samiOK == false)){
+        if (msg.content == "Le MJ n'est pas un tyran, je ne suis pas censuré" && msg.member.user.username == "Samgd14"){
+            samgdOK = true;
+            fs.writeFile('SamgdOK.txt', "true", (err) => {if (err) throw err; }) 
+            msg.channel.send("Félicitions! Vous pouvez parler")
+            timeToDelete = 5
+        }
+        else if(msg.content == "Le MJ n'est pas un tyran, je ne suis pas censuré" && msg.member.user.username == "Fiat_Nyx"){
+            minixiOK = true
+            fs.writeFile('MinixiOK.txt', "true", (err) => {if (err) throw err; }) 
+            msg.channel.send("Félicitions! Vous pouvez parler")
+            timeToDelete = 5
+        }
+        else{
+            msg.channel.send("Je ne suis qu'un pauvre bot qui suit les ordres d'un dictateur. Je suis désolé de toute cette censure. Toutefois, si vous tapez 'Le MJ n'est pas un tyran, je ne suis pas censuré', vous pourrez parler à nouveau");
+            timeToDelete = 15
+            console.log(msg.content)
+            let messagePrecedant = fs.readFileSync('TextLog.txt')
+            fs.writeFile('TextLog.txt', messagePrecedant + msg.content, (err) => { 
+                if (err) throw err; 
+            }) 
+            msg.delete();
+        }
+        
         
     }
     else if(msg.member.user.username == "BotDeTest"){
         messageToDelete.push(msg);
-        setTimeout(deleteMessageDuBot,10000);
+        setTimeout(deleteMessageDuBot,1000 * timeToDelete);
         
     }
     
